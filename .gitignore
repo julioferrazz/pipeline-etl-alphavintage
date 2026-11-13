@@ -1,0 +1,70 @@
+# ==============================================================================
+# AMBIENTE VIRTUAL E DEPENDÊNCIAS PYTHON
+# ==============================================================================
+.venv/
+venv/
+env/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# ==============================================================================
+# BYTECODE E CACHES DO PYTHON
+# ==============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==============================================================================
+# SEGREDOS E VARIÁVEIS DE AMBIENTE (NUNCA VERSIONAR!)
+# ==============================================================================
+.env
+.env.*
+!.env.example
+
+# ==============================================================================
+# DADOS LOCAIS DO PIPELINE (RAW & PROCESSED)
+# ==============================================================================
+# O histórico do Git não deve armazenar dados brutos nem processados.
+# O arquivo .gitkeep é mantido para preservar a estrutura de pastas no repositório.
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+
+# Arquivos de dados avulsos
+*.json
+!package.json
+!tsconfig.json
+*.csv
+*.parquet
+
+# ==============================================================================
+# BANCOS DE DADOS LOCAIS (DuckDB, SQLite, etc.)
+# ==============================================================================
+*.duckdb
+*.duckdb.wal
+*.db
+*.sqlite
+*.sqlite3
+
+# ==============================================================================
+# LOGS E ARQUIVOS TEMPORÁRIOS
+# ==============================================================================
+*.log
+logs/
+
+# ==============================================================================
+# CONFIGURAÇÕES DE IDES E SISTEMA OPERACIONAL
+# ==============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
