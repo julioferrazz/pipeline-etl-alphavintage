@@ -1,25 +1,42 @@
+import os
 from pathlib import Path
 
-import duckdb
 import pandas as pd
+from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
 
 
 def load_to_db(
     df: pd.DataFrame,
-    db_path: Path | None = None,
     table_name: str = "daily_stock_prices",
 ) -> None:
+    load_dotenv()
+    postgre_user = os.getenv("POSTGRES_USER")
+    postgre_password = os.getenv("POSTGRES_PASSWORD")
+    postgre_host = os.getenv("POSTGRES_HOST")
+    postgre_port = os.getenv("POSTGRES_PORT")
+    postgre_db = os.getenv("POSTGRES_DB")
+
+    DATABASE_URL = f"postgresql+psycopg2://{postgre_user}:{postgre_password}@{postgre_host}:{postgre_port}/{postgre_db}"
+    engine = create_engine(DATABASE_URL)
+    try:
+        with engine.connect() as conn:
+            resultado = conn.execute(text("SELECT version();"))
+            print("Conectado com sucesso! Versão do banco:")
+            for linha in resultado:
+                print(linha[0])
+    except Exception as e:
+        print(f"Erro ao conectar: {e}")
+        raise
+
+    df.to_sql("staging_stock_prices", con=engine, if_exists="replace", index=False)
 
     BASE_DIR = Path(__file__).resolve().parent.parent
-    if db_path is None:
-        db_path = BASE_DIR / "data" / "processed" / "stocks.duckdb"
-    db_path.parent.mkdir(parents=True, exist_ok=True)
     sql_path = BASE_DIR / "sql" / "Query.sql"
-    with duckdb.connect(database=str(db_path)) as conn:
-        create_table_query = sql_path.read_text(encoding="utf-8")
-        conn.execute(create_table_query)
-        conn.execute(f"INSERT OR REPLACE INTO {table_name} SELECT * FROM df")
-    print(f"Loaded {len(df)} rows to {table_name} in {db_path}")
+    create_load_query = sql_path.read_text(encoding="utf-8")
+    with engine.begin() as conn:
+        conn.execute(text(create_load_query))
+        print("Dados carregados no banco com sucesso.")
 
 
 if __name__ == "__main__":

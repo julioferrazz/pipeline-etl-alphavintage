@@ -17,7 +17,7 @@ def main() -> None:
     print("Transforming data...")
     df = transform_daily_stock(json_file)
     print("\nTransformation done!")
-    print("Saving data in DuckDB...")
+    print("Saving data in PostgreSQL...")
     load_to_db(df)
     print("\nData saved sucessfully!")
 

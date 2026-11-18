@@ -51,6 +51,7 @@ data/processed/*
 *.db
 *.sqlite
 *.sqlite3
+analytics.sql
 
 # ==============================================================================
 # LOGS E ARQUIVOS TEMPORÁRIOS
