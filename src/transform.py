@@ -26,8 +26,6 @@ def transform_daily_stock(file_path: Path | str) -> pd.DataFrame:
     df["volume"] = df["volume"].astype(int)
     df = df.sort_values(by="date")
 
-    print("--- Prévia do DataFrame Transformado ---")
-    print(df.head())
     return df
 
 

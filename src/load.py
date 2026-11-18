@@ -22,11 +22,11 @@ def load_to_db(
     try:
         with engine.connect() as conn:
             resultado = conn.execute(text("SELECT version();"))
-            print("Conectado com sucesso! Versão do banco:")
+            print("Database connected! Database version:")
             for linha in resultado:
                 print(linha[0])
     except Exception as e:
-        print(f"Erro ao conectar: {e}")
+        print(f"Error on connecting to database: {e}")
         raise
 
     df.to_sql("staging_stock_prices", con=engine, if_exists="replace", index=False)
@@ -36,7 +36,6 @@ def load_to_db(
     create_load_query = sql_path.read_text(encoding="utf-8")
     with engine.begin() as conn:
         conn.execute(text(create_load_query))
-        print("Dados carregados no banco com sucesso.")
 
 
 if __name__ == "__main__":
