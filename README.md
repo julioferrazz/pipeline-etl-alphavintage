@@ -60,7 +60,7 @@ flowchart TD
         GLD[("Gold<br/>Métricas & Indicadores")]
     end
 
-    subgraph Serving["Serving / Analytics"]
+    subgraph Serving["Serving"]
         PG[("PostgreSQL 16<br/>daily_stock_prices")]
     end
 
