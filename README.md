@@ -62,7 +62,6 @@ flowchart TD
 
     subgraph Serving["Serving / Analytics"]
         PG[("PostgreSQL 16<br/>daily_stock_prices")]
-        BI["analytics.sql / BI"]
     end
 
     AF -. "1. Dispara extração" .-> EXT
@@ -73,7 +72,6 @@ flowchart TD
     BRZ --> SLV
     SLV --> GLD
     GLD -- "4. Upsert / Sync" --> PG
-    PG --> BI
 ```
 
 ---
