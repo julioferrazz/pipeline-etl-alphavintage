@@ -37,6 +37,47 @@ Para cada dia negociado, o pipeline coleta e processa os seguintes campos:
 
 ---
 
+## Diagrama da Arquitetura
+
+```mermaid
+flowchart TD
+    subgraph Orchestration["Orquestração"]
+        AF["Apache Airflow<br/>(DAG Agendada)"]
+    end
+
+    subgraph Source["Fonte Externa"]
+        API["Alpha Vantage API"]
+    end
+
+    subgraph Ingestion["Ingestão (Python / Docker)"]
+        EXT["extract.py"]
+        RAW[("Raw Layer<br/>JSON Bruto")]
+    end
+
+    subgraph Lakehouse["Databricks (Processamento & Lakehouse)"]
+        BRZ[("Bronze<br/>Dados Brutos")]
+        SLV[("Silver (PySpark)<br/>Limpeza, Tipagem & Dedup")]
+        GLD[("Gold<br/>Métricas & Indicadores")]
+    end
+
+    subgraph Serving["Serving / Analytics"]
+        PG[("PostgreSQL 16<br/>daily_stock_prices")]
+        BI["analytics.sql / BI"]
+    end
+
+    AF -. "1. Dispara extração" .-> EXT
+    API --> EXT
+    EXT --> RAW
+    RAW -- "2. Ingestão" --> BRZ
+    AF -. "3. Dispara Jobs" .-> SLV
+    BRZ --> SLV
+    SLV --> GLD
+    GLD -- "4. Upsert / Sync" --> PG
+    PG --> BI
+```
+
+---
+
 ## Estrutura do Projeto
 
 ```text
